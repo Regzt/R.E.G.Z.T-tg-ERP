@@ -121,3 +121,7 @@
 #define TECHWEB_NODE_TELECOMS "telecoms"
 #define TECHWEB_NODE_UNREGULATED_BLUESPACE "unregulated_bluespace"
 #define TECHWEB_NODE_XENOBIOLOGY "xenobiology"
+
+//REGZT add
+#define TECHWEB_NODE_AI_UPLINK_BRAIN "ai_uplink_brain"
+#define TECHWEB_NODE_BEER_SYNTIZER "integrated beer syntizer"

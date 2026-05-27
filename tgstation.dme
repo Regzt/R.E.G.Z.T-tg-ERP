@@ -10959,5 +10959,7 @@
 #include "modular_regzt\code\modules\scrap\scrap_pile.dm"
 #include "modular_regzt\code\modules\scrap\slime_extract_list.dm"
 #include "modular_regzt\code\modules\ipc_construction\ipc_construction.dm"
+#include "modular_regzt\code\modules\ai_uplink_upload\design.dm"
+#include "modular_regzt\code\modules\ai_uplink_upload\the_thing.dm"
 //остальное
 //#include "modular_iris/iris.dm"
