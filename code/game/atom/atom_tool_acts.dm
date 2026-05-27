@@ -127,7 +127,10 @@
 		if(TOOL_BLOWROD)
 			act_result = is_left_clicking ? blowrod_act(user, tool) : blowrod_act_secondary(user, tool)
 		// SKYRAT EDIT ADDITION END
-
+		//REG Start
+		if(TOOL_SHOVEL)
+			act_result = is_left_clicking ? shovel_act(user, tool) : shovel_act_secondary(user, tool)
+		//REG End
 	if(!act_result)
 		return NONE
 
@@ -333,3 +336,10 @@
 /// Called on an object when a tool with analyzer capabilities is used to right click an object
 /atom/proc/analyzer_act_secondary(mob/living/user, obj/item/tool)
 	return
+
+//REG add заглушка с nova sector
+/// Called on an object when a tool with shovel capabilities is used to left click an object
+/atom/proc/shovel_act(mob/living/user, obj/item/tool)
+
+/// Called on an object when a tool with shovel capabilities is used to right click an object
+/atom/proc/shovel_act_secondary(mob/living/user, obj/item/tool)

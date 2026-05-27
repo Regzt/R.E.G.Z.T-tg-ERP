@@ -10938,3 +10938,26 @@
 #include "modular_zzplurt\modules\Nanotrasen_Stuff\Nanotrasen_trainer\nanotrasen_crew_trainer.dm"
 #include "modular_zzplurt\modules\primitive_production\code\primitive.dm"
 // END_INCLUDE
+
+//REG add
+
+//мой модуль
+#include "modular_regzt\code\modules\crafting\random_items.dm"
+#include "modular_regzt\code\modules\random_item\borg_hand.dm"
+#include "modular_regzt\code\modules\random_item\dynamo_machine.dm"
+#include "modular_regzt\code\modules\random_item\hand-made_drone.dm"
+#include "modular_regzt\code\modules\random_item\implant.dm"
+#include "modular_regzt\code\modules\random_item\lockermech.dm"
+#include "modular_regzt\code\modules\random_item\makeshift_tool.dm"
+#include "modular_regzt\code\modules\random_item\material_item.dm"
+#include "modular_regzt\code\modules\random_item\random_nodes.dm"
+#include "modular_regzt\code\modules\random_item\spot.dm"
+#include "modular_regzt\code\modules\random_item\stock_parts.dm"
+#include "modular_regzt\code\modules\random_item\quirk\quirk_all.dm"
+#include "modular_regzt\code\modules\scrap\scrap_beacon.dm"
+#include "modular_regzt\code\modules\scrap\scrap_loot.dm"
+#include "modular_regzt\code\modules\scrap\scrap_pile.dm"
+#include "modular_regzt\code\modules\scrap\slime_extract_list.dm"
+#include "modular_regzt\code\modules\ipc_construction\ipc_construction.dm"
+//остальное
+//#include "modular_iris/iris.dm"
