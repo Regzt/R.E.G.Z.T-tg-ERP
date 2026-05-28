@@ -1,7 +1,7 @@
 SUBSYSTEM_DEF(title)
 	name = "Title Screen"
 	flags = SS_NO_FIRE
-	init_stage = INITSTAGE_EARLY
+	init_stage = INITSTAGE_FIRST
 
 	var/file_path
 	var/icon/startup_splash
@@ -23,40 +23,29 @@ SUBSYSTEM_DEF(title)
 	var/list/progress_json = list()
 	/// The reference realtime that we're treating as 0 for this run
 	var/progress_reference_time = 0
-	/// A list of station traits that have lobby buttons
-	var/list/available_lobby_station_traits = list()
 
 /datum/controller/subsystem/title/Initialize()
 	var/dat
-	if(!fexists("[global.config.directory]/splurt/splurt_title.txt")) // SPLURT EDIT - original title_html.txt
-		to_chat(world, span_boldwarning("CRITICAL ERROR: Unable to read splurt_title.txt, reverting to backup title html, please check your server config and ensure this file exists.")) // BUBBER EDIT - original title_html.txt
+	if(!fexists("[global.config.directory]/nova/title_html.txt"))
+		to_chat(world, span_boldwarning("CRITICAL ERROR: Unable to read title_html.txt, reverting to backup title html, please check your server config and ensure this file exists."))
 		dat = DEFAULT_TITLE_HTML
 	else
-		dat = file2text("[global.config.directory]/splurt/splurt_title.txt") // SPLURT EDIT - original title_html.txt
+		dat = file2text("[global.config.directory]/nova/title_html.txt")
 
 	title_html = dat
 
 	var/list/provisional_title_screens = flist("[global.config.directory]/title_screens/images/")
 	var/list/local_title_screens = list()
-	var/list/current_map_file = splittext(SSmapping.current_map.map_file, ".")
 
 	for(var/screen in provisional_title_screens)
 		var/list/formatted_list = splittext(screen, "+")
-		if((LOWER_TEXT(formatted_list[1]) == LOWER_TEXT(current_map_file[1])))
+		if((LAZYLEN(formatted_list) == 1 && (formatted_list[1] != "exclude" && formatted_list[1] != "blank.png" && formatted_list[1] != "startup_splash")))
 			local_title_screens += screen
-			continue
 
 		if(LAZYLEN(formatted_list) > 1 && LOWER_TEXT(formatted_list[1]) == "startup_splash")
 			var/file_path = "[global.config.directory]/title_screens/images/[screen]"
-			splashscreen_name = screen // SPLURT EDIT ADDITION - Roundend Embeds
 			ASSERT(fexists(file_path))
 			startup_splash = new(fcopy_rsc(file_path))
-
-	if(local_title_screens.len == 0)
-		for(var/screen in provisional_title_screens)
-			var/list/formatted_list = splittext(screen, "+")
-			if((LAZYLEN(formatted_list) == 1 && (formatted_list[1] != "exclude" && formatted_list[1] != "blank.png" && formatted_list[1] != "startup_splash")))
-				local_title_screens += screen
 
 	// Progress stuff
 	check_progress_reference_time()
@@ -73,9 +62,18 @@ SUBSYSTEM_DEF(title)
 			ASSERT(fexists(file_path))
 			var/icon/title2use = new(fcopy_rsc(file_path))
 			title_screens += title2use
-			title_screen_names[title2use] = i // SPLURT EDIT ADDITION - Roundend Embeds
 
 	return SS_INIT_SUCCESS
+
+/**
+ * Returns the number of remaining latejoin antagonist slots if we are past roundstart,
+ * otherwise returns "PRE-ROUND".
+ */
+/datum/controller/subsystem/title/proc/get_latejoin_queue_count()
+	if (SSticker.current_state < GAME_STATE_PLAYING)
+		return "PRE-ROUND"
+
+	return max(SSdynamic.rulesets_to_spawn[LATEJOIN], 0)
 
 /**
  * Make sure reference time is set up. If not, this is now time 0.
@@ -191,7 +189,7 @@ SUBSYSTEM_DEF(title)
 	if(!(istype(user) && user.title_screen_is_ready))
 		return
 
-	user.client << output(name, "title_browser:update_current_character")
+	user.client << output(name, "nova_title_browser:update_current_character")
 
 /**
  * Adds a startup message to the splashscreen.
@@ -229,5 +227,5 @@ SUBSYSTEM_DEF(title)
 		if(!new_player.title_screen_is_ready)
 			continue
 
-		new_player.client << output(msg_html, "title_browser:append_terminal_text")
-		new_player.client << output(list2params(list(new_timing, SStitle.average_completion_time)), "title_browser:update_loading_progress")
+		new_player.client << output(msg_html, "nova_title_browser:append_terminal_text")
+		new_player.client << output(list2params(list(new_timing, SStitle.average_completion_time)), "nova_title_browser:update_loading_progress")

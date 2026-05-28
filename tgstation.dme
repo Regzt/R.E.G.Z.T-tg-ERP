@@ -10961,5 +10961,7 @@
 #include "modular_regzt\code\modules\ipc_construction\ipc_construction.dm"
 #include "modular_regzt\code\modules\ai_uplink_upload\design.dm"
 #include "modular_regzt\code\modules\ai_uplink_upload\the_thing.dm"
+#include "modular_regzt\code\modules\port_paracode\body_accessories.dm"
+#include "modular_regzt\code\modules\port_paracode\vulpkanin_tail_markings.dm"
 //остальное
 //#include "modular_iris/iris.dm"

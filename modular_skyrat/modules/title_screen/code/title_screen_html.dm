@@ -1,8 +1,7 @@
-
 GLOBAL_LIST_EMPTY(startup_messages)
 // FOR MOR INFO ON HTML CUSTOMISATION, SEE: https://github.com/Skyrat-SS13/Skyrat-tg/pull/4783
 
-#define MAX_STARTUP_MESSAGES 1
+#define MAX_STARTUP_MESSAGES 27
 
 /mob/dead/new_player/proc/get_title_html()
 	var/dat = SStitle.title_html
@@ -50,7 +49,6 @@ GLOBAL_LIST_EMPTY(startup_messages)
 			var progress_sub_start = 0;
 			// Target start position of progress area. A captured value of progress_current_position.
 			var target_sub_start = 0;
-
 			setInterval(function() {
 				// Compensate for shakey execution.
 				if(progress_current_time < progress_completion_time) {
@@ -72,11 +70,9 @@ GLOBAL_LIST_EMPTY(startup_messages)
 
 				// Recalculate gap as a % within a % since they're nested.
 				var progress_sub_current_position = (progress_current_position - progress_sub_start) / progress_current_position * 100;
-
 				progress_bar.style.width = "" + progress_current_position + "%";
 				sub_progress_bar.style.width = "" + progress_sub_current_position + "%";
 			}, 16.666666667);
-
 			function update_loading_progress(current_time, total_time) {
 				progress_current_time = parseFloat(current_time);
 				progress_completion_time = parseFloat(total_time);
@@ -105,8 +101,8 @@ GLOBAL_LIST_EMPTY(startup_messages)
 			dat += {"
 				<a class="menu_button" href='byond://?src=[text_ref(src)];late_join=1'>JOIN GAME</a>
 				<a class="menu_button" href='byond://?src=[text_ref(src)];view_manifest=1'>CREW MANIFEST</a>
+				<a class="menu_button" href='byond://?src=[text_ref(src)];character_directory=1'>CHARACTER DIRECTORY</a>
 			"}
-			dat += {"<a class="menu_button" href='byond://?src=[text_ref(src)];character_directory=1'>CHARACTER DIRECTORY</a>"}
 
 		dat += {"<a class="menu_button" href='byond://?src=[text_ref(src)];observe=1'>OBSERVE</a>"}
 
@@ -115,9 +111,9 @@ GLOBAL_LIST_EMPTY(startup_messages)
 			<a class="menu_button" href='byond://?src=[text_ref(src)];character_setup=1'>SETUP CHARACTER (<span id="character_slot">[uppertext(client.prefs.read_preference(/datum/preference/name/real_name))]</span>)</a>
 			<a class="menu_button" href='byond://?src=[text_ref(src)];game_options=1'>GAME OPTIONS</a>
 			<a id="be_antag" class="menu_button" href='byond://?src=[text_ref(src)];toggle_antag=1'>[client.prefs.read_preference(/datum/preference/toggle/be_antag) ? "<span class='checked'>☑</span> BE ANTAGONIST" : "<span class='unchecked'>☒</span> BE ANTAGONIST"]</a>
-			<!-- SPLURT STATION EDIT: Server swap button removed - not needed for single server setup -->
-			<!-- <hr> -->
-			<!--  <a class="menu_button" href='byond://?src=[text_ref(src)];server_swap=1'>SWAP SERVERS</a> -->
+			<!--
+			<span class="menu_button info_display">LATEJOIN QUEUE: [SStitle.get_latejoin_queue_count()]</span>
+			-->
 		"}
 
 		if(length(GLOB.lobby_station_traits))
@@ -132,17 +128,27 @@ GLOBAL_LIST_EMPTY(startup_messages)
 			const PLAYER_READY_TO_PLAY = "[PLAYER_READY_TO_PLAY]"
 			const PLAYER_NOT_READY = "[PLAYER_NOT_READY]"
 			var ready_mark = document.getElementById("ready");
+
 			function toggle_ready(setReady) {
-				if(setReady === PLAYER_READY_TO_PLAY) {
-					ready_mark.innerHTML = "<span class='checked'>☑</span> READY"
-				}
-				else {
-					ready_mark.innerHTML = "<span class='unchecked'>☒</span> READY"
+				if(setReady) {
+					if(setReady === PLAYER_READY_TO_PLAY) {
+						ready_mark.innerHTML = "<span class='checked'>☑</span> READY";
+					} else {
+						ready_mark.innerHTML = "<span class='unchecked'>☒</span> READY";
+					}
+				} else {
+					if(ready_mark.innerHTML.indexOf('unchecked') !== -1) {
+						ready_mark.innerHTML = "<span class='checked'>☑</span> READY";
+					} else {
+						ready_mark.innerHTML = "<span class='unchecked'>☒</span> READY";
+					}
 				}
 			}
+
 			var antag_int = 0;
 			var antag_mark = document.getElementById("be_antag");
 			var antag_marks = \[ "<span class='unchecked'>☒</span> BE ANTAGONIST", "<span class='checked'>☑</span> BE ANTAGONIST" \];
+
 			function toggle_antag(setAntag) {
 				if(setAntag) {
 					antag_int = setAntag;
@@ -167,12 +173,13 @@ GLOBAL_LIST_EMPTY(startup_messages)
 		"}
 
 	// Tell the server this page loaded.
-	if(!title_screen_is_ready)
-		dat += {"
-			<script>
-				location.href = "byond://?src=[text_ref(src)];title_is_ready=1";
-			</script>
-		"}
+	dat += {"
+		<script>
+			var ready_request = new XMLHttpRequest();
+			ready_request.open("GET", "?src=[text_ref(src)];title_is_ready=1", true);
+			ready_request.send();
+		</script>
+	"}
 
 	dat += "</body></html>"
 

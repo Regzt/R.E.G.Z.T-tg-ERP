@@ -30,21 +30,17 @@ ADMIN_VERB(change_title_screen_notice, R_FUN, "Title Screen: Set Notice", "Sets 
 		return
 	for(var/mob/dead/new_player/new_player in GLOB.new_player_list)
 		to_chat(new_player, span_boldannounce("TITLE NOTICE UPDATED: [new_notice]"))
-		SEND_SOUND(new_player,  sound('modular_skyrat/modules/admin/sound/duckhonk.ogg'))
+		SEND_SOUND(new_player,  sound('modular_nova/modules/admin/sound/duckhonk.ogg'))
 
 /**
  * Reloads the titlescreen if it is bugged for someone.
  */
-/client/verb/fix_title_screen()
-	set name = "Fix Lobby Screen"
-	set desc = "Lobbyscreen broke? Press this."
-	set category = "OOC"
-
-	if(istype(mob, /mob/dead/new_player))
-		var/mob/dead/new_player/new_player = mob
+ADMIN_VERB(fix_title_screen, R_ADMIN, "Fix Lobby Screen", "Lobbyscreen broke? Press this.", ADMIN_CATEGORY_MAIN)
+	if(istype(user.mob, /mob/dead/new_player))
+		var/mob/dead/new_player/new_player = user.mob
 		new_player.show_title_screen()
 	else
-		winset(src, "title_browser", "is-disabled=true;is-visible=false")
+		winset(src, "nova_title_browser", "is-disabled=true;is-visible=false")
 		winset(src, "status_bar", "is-visible=true")
 
 /**
@@ -54,7 +50,7 @@ ADMIN_VERB(change_title_screen_html, R_DEBUG, "Title Screen: Set HTML", "Change 
 	log_admin("[key_name(user)] is setting the title screen HTML.")
 	message_admins("[key_name_admin(user)] is setting the title screen HTML.")
 
-	var/new_html = input(usr, "Please enter your desired HTML(WARNING: YOU WILL BREAK SHIT)", "DANGER: TITLE HTML EDIT") as message|null
+	var/new_html = input(user, "Please enter your desired HTML(WARNING: YOU WILL BREAK SHIT)", "DANGER: TITLE HTML EDIT") as message|null
 
 	if(!new_html)
 		return
